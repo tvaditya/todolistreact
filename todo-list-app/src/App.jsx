@@ -1,5 +1,5 @@
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TrashIcon } from '@radix-ui/react-icons';
 import './App.css'
 
@@ -8,21 +8,32 @@ function App() {
     const [isModalOpen, setModalOpen] = useState(false);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [priority, setPriority] = useState("regular");
     const closeModal = () => setModalOpen(false);
     const openModal = () => setModalOpen(true);
 
+    const saveTasks = (task) => {
+        localStorage.setItem("tasks", JSON.stringify(task));
+    };
+
+    const getTasks = () => {
+        const tasksJSON = localStorage.getItem("tasks");
+        return tasksJSON ? JSON.parse(tasksJSON) : [];
+    };
     const addNewTask = () => {
         const currentTasks = [...tasks];
         const newTask = {
             id: Date.now() + Math.random(),
             title: title,
             description: description,
-            done: false
+            done: false,
+            priority: priority
         };
 
         currentTasks.push(newTask);
 
         setTasks(currentTasks);
+        saveTasks(currentTasks);
 
         setModalOpen(false);
 
@@ -35,6 +46,7 @@ function App() {
         // const index = currentTasks.findIndex((task) => task.id === id_ex);
         currentTasks.splice(index, 1);
         setTasks(currentTasks);
+        saveTasks(currentTasks);
     };
 
     const changeTaskStatus = (index) => {
@@ -43,8 +55,14 @@ function App() {
         taskToUpdate.done = !taskToUpdate.done;
         currentTasks.splice(index, 1, taskToUpdate);
         setTasks(currentTasks);
-        console.log(tasks)
+        saveTasks(currentTasks);
+        // console.log(tasks)
     }
+
+    useEffect(() => {
+        const savedTasks = getTasks()
+        setTasks(savedTasks);
+    }, []); //reexecuta a função quando o array de dependências mudar, caso vc entre com o array vazio, ele só executa uma vez
 
     // Lista de tarefas
     return (
@@ -68,8 +86,11 @@ function App() {
                                     <input type="checkbox"
                                            className={"scale-150"}
                                            onChange={
-                                               () => changeTaskStatus(index)
-                                           }/>
+                                               () => {changeTaskStatus(index)}
+                                           }
+                                           value={task.done}
+                                           checked={task.done}
+                                    />
                                     <div className={"flex gap-6"}>
                                         <p className={"font-medium"}>{task.title}</p>
                                         <p className={"text-slate-400"}>{task.description}</p>
