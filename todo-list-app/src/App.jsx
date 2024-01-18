@@ -1,3 +1,4 @@
+
 import { useState } from 'react'
 import { TrashIcon } from '@radix-ui/react-icons';
 import './App.css'
@@ -67,8 +68,8 @@ function App() {
                                     <input type="checkbox"
                                            className={"scale-150"}
                                            onChange={
-                                        () => changeTaskStatus(index)
-                                    }/>
+                                               () => changeTaskStatus(index)
+                                           }/>
                                     <div className={"flex gap-6"}>
                                         <p className={"font-medium"}>{task.title}</p>
                                         <p className={"text-slate-400"}>{task.description}</p>
