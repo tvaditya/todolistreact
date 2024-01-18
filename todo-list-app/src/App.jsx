@@ -38,10 +38,11 @@ function App() {
 
     const changeTaskStatus = (index) => {
         const currentTasks = [...tasks];
-        const taskTpUpdate = currentTasks.at(index);
-        taskTpUpdate.done = !taskTpUpdate.done;
-        currentTasks.splice(index, 1, taskTpUpdate);
+        const taskToUpdate = currentTasks.at(index);
+        taskToUpdate.done = !taskToUpdate.done;
+        currentTasks.splice(index, 1, taskToUpdate);
         setTasks(currentTasks);
+        console.log(tasks)
     }
 
     // Lista de tarefas
@@ -58,10 +59,16 @@ function App() {
                     {tasks.map((task, index) => {
                         return(
                             <div key={task.id}
-                                 className={`${task.done ? "opacity-50": ""}flex items-center justify-between text-slate-200 text-sm py-2.5`}
+                                 className={`${
+                                     task.done ? "opacity-50 ": ""
+                                 }flex items-center justify-between text-slate-200 text-sm py-2.5`}
                             >
                                 <div className={"flex gap-6"}>
-                                    <input type="checkbox" className={"scale-150"} onChange={changeTaskStatus(index)}/>
+                                    <input type="checkbox"
+                                           className={"scale-150"}
+                                           onChange={
+                                        () => changeTaskStatus(index)
+                                    }/>
                                     <div className={"flex gap-6"}>
                                         <p className={"font-medium"}>{task.title}</p>
                                         <p className={"text-slate-400"}>{task.description}</p>
